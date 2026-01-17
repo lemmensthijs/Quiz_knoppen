@@ -1,0 +1,4 @@
+{
+  "name": "QuizBuzz AI",
+  "description": "A real-time quiz buzzer application where a host generates questions using Gemini, and players buzz in using their devices."
+}
