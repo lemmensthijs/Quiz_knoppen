@@ -6,8 +6,8 @@ import { GameMessage, GameState, GamePhase, Player } from '../types';
 // Vervang de tekst tussen de aanhalingstekens hieronder met jouw gegevens uit Supabase.
 // Laat 'process.env' weg, dat werkt vaak niet direct in de browser.
 
-const SUPABASE_URL = 'PLAK_HIER_JOUW_SUPABASE_URL'; 
-const SUPABASE_KEY = 'PLAK_HIER_JOUW_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://nvbycbzmxmlzpcyyiswg.supabase.co'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im52YnljYnpteG1senBjeXlpc3dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2NzE0ODEsImV4cCI6MjA4NDI0NzQ4MX0.06E9LILJQkaTmpERDieNO0XYqMkkWqTcbhxXansjsXg';
 
 const CHANNEL_NAME = 'quiz_buzz_room_v2';
 
