@@ -21,21 +21,21 @@ export const PlayerView: React.FC = () => {
 
   // Determine Screen Color / State
   let screenClass = "bg-slate-900"; // Default
-  let statusText = "Waiting for Host";
+  let statusText = "Wachten op Presentator";
   let canBuzz = false;
 
   if (joined) {
     if (gameState.phase === GamePhase.QUESTION_ACTIVE) {
       screenClass = "bg-blue-900"; // Ready to buzz
-      statusText = "GO!";
+      statusText = "DRUKKEN!";
       canBuzz = true;
     } else if (gameState.phase === GamePhase.BUZZED) {
       if (gameState.buzzedPlayerId === profile?.id) {
         screenClass = "bg-green-600"; // Winner
-        statusText = "YOU BUZZED!";
+        statusText = "JIJ DRUKTE!";
       } else {
         screenClass = "bg-red-700"; // Loser
-        statusText = `LOCKED: ${gameState.buzzedPlayerName}`;
+        statusText = `TE LAAT: ${gameState.buzzedPlayerName}`;
       }
     }
   }
@@ -46,19 +46,19 @@ export const PlayerView: React.FC = () => {
       <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-900 text-white">
         <div className="w-full max-w-sm space-y-8">
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold">Join Game</h1>
-            <p className="text-slate-400">Enter your name to connect to the main screen.</p>
+            <h1 className="text-3xl font-bold">Doe Mee</h1>
+            <p className="text-slate-400">Vul je naam in om te verbinden met het hoofdscherm.</p>
           </div>
           <form onSubmit={handleJoin} className="space-y-4">
             <input 
               type="text" 
-              placeholder="Your Name" 
+              placeholder="Je Naam" 
               className="w-full bg-slate-800 border border-slate-700 rounded-xl p-4 text-lg text-center text-white focus:ring-2 focus:ring-blue-500 outline-none"
               value={name}
               onChange={(e) => setName(e.target.value)}
               maxLength={12}
             />
-            <Button fullWidth size="lg" type="submit">Join</Button>
+            <Button fullWidth size="lg" type="submit">Verbinden</Button>
           </form>
         </div>
       </div>
@@ -102,7 +102,7 @@ export const PlayerView: React.FC = () => {
             `}
           >
              <span className="text-4xl font-black text-white uppercase tracking-widest pointer-events-none select-none">
-               {canBuzz ? 'PUSH' : gameState.buzzedPlayerId === profile?.id ? '👑' : 'WAIT'}
+               {canBuzz ? 'DRUK' : gameState.buzzedPlayerId === profile?.id ? '👑' : 'WACHT'}
              </span>
           </button>
         </div>

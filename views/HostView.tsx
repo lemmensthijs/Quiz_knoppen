@@ -1,18 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { useHostGame } from '../services/gameService';
-import { generateQuestion } from '../services/geminiService';
 import { Button } from '../components/Button';
 import { GamePhase, QuestionCard } from '../types';
 
 export const HostView: React.FC = () => {
   const { gameState, setQuestion, resetRound } = useHostGame();
   
-  // Tabs: 'ai', 'manual', 'file'
-  const [activeTab, setActiveTab] = useState<'ai' | 'manual' | 'file'>('ai');
-
-  // AI State
-  const [topic, setTopic] = useState('');
-  const [loading, setLoading] = useState(false);
+  // Tabs: 'manual', 'file' (AI removed)
+  const [activeTab, setActiveTab] = useState<'manual' | 'file'>('manual');
 
   // Manual State
   const [manualType, setManualType] = useState<'question' | 'task'>('question');
@@ -22,13 +17,6 @@ export const HostView: React.FC = () => {
   // File State
   const [queue, setQueue] = useState<QuestionCard[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleGenerate = async () => {
-    setLoading(true);
-    const card = await generateQuestion(topic || 'general knowledge');
-    setQuestion(card);
-    setLoading(false);
-  };
 
   const handleManualSubmit = () => {
     if (!manualText.trim()) return;
@@ -84,10 +72,10 @@ export const HostView: React.FC = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 flex flex-col">
       {/* HEADER */}
       <header className="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
-        <h2 className="text-xl md:text-3xl font-bold text-cyan-400">Host Dashboard</h2>
+        <h2 className="text-xl md:text-3xl font-bold text-cyan-400">Presentator Dashboard</h2>
         <div className="flex items-center gap-2 text-sm md:text-base bg-slate-800 px-4 py-2 rounded-full">
           <span className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500 animate-pulse"></span>
-          <span>{gameState.players.length} Players Connected</span>
+          <span>{gameState.players.length} Spelers Verbonden</span>
         </div>
       </header>
 
@@ -100,52 +88,22 @@ export const HostView: React.FC = () => {
             {/* TABS */}
             <div className="flex border-b border-slate-800">
               <button 
-                onClick={() => setActiveTab('ai')}
-                className={`flex-1 py-3 text-sm font-bold transition-colors ${activeTab === 'ai' ? 'bg-cyan-900/20 text-cyan-400' : 'text-slate-500 hover:bg-slate-800'}`}
-              >
-                AI Auto
-              </button>
-              <button 
                 onClick={() => setActiveTab('manual')}
                 className={`flex-1 py-3 text-sm font-bold transition-colors ${activeTab === 'manual' ? 'bg-cyan-900/20 text-cyan-400' : 'text-slate-500 hover:bg-slate-800'}`}
               >
-                Manual
+                Handmatig
               </button>
               <button 
                 onClick={() => setActiveTab('file')}
                 className={`flex-1 py-3 text-sm font-bold transition-colors ${activeTab === 'file' ? 'bg-cyan-900/20 text-cyan-400' : 'text-slate-500 hover:bg-slate-800'}`}
               >
-                Upload
+                Uploaden
               </button>
             </div>
 
             {/* TAB CONTENT */}
             <div className="p-6 min-h-[300px]">
               
-              {/* AI TAB */}
-              {activeTab === 'ai' && (
-                <div className="space-y-4 animate-fade-in">
-                  <p className="text-sm text-slate-400">Generate a question using Google Gemini.</p>
-                  <div>
-                    <label className="block text-xs uppercase tracking-wider text-slate-500 mb-1">Topic</label>
-                    <input 
-                      type="text" 
-                      value={topic}
-                      onChange={(e) => setTopic(e.target.value)}
-                      placeholder="e.g. Science, 90s Music"
-                      className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-cyan-500 outline-none"
-                    />
-                  </div>
-                  <Button 
-                    fullWidth 
-                    onClick={handleGenerate} 
-                    disabled={loading}
-                  >
-                    {loading ? 'Generating...' : 'Generate Question'}
-                  </Button>
-                </div>
-              )}
-
               {/* MANUAL TAB */}
               {activeTab === 'manual' && (
                 <div className="space-y-4 animate-fade-in">
@@ -157,7 +115,7 @@ export const HostView: React.FC = () => {
                           onChange={() => setManualType('question')}
                           className="text-cyan-500 focus:ring-cyan-500"
                         />
-                        <span className="text-sm">Question</span>
+                        <span className="text-sm">Vraag</span>
                      </label>
                      <label className="flex items-center space-x-2 cursor-pointer">
                         <input 
@@ -166,35 +124,35 @@ export const HostView: React.FC = () => {
                           onChange={() => setManualType('task')}
                           className="text-cyan-500 focus:ring-cyan-500"
                         />
-                        <span className="text-sm">Task</span>
+                        <span className="text-sm">Opdracht</span>
                      </label>
                   </div>
 
                   <div>
-                    <label className="block text-xs uppercase tracking-wider text-slate-500 mb-1">Text</label>
+                    <label className="block text-xs uppercase tracking-wider text-slate-500 mb-1">Tekst</label>
                     <textarea 
                       value={manualText}
                       onChange={(e) => setManualText(e.target.value)}
-                      placeholder="Enter question or task..."
+                      placeholder="Voer vraag of opdracht in..."
                       className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-cyan-500 outline-none h-24 resize-none"
                     />
                   </div>
 
                   {manualType === 'question' && (
                     <div>
-                      <label className="block text-xs uppercase tracking-wider text-slate-500 mb-1">Answer (Optional)</label>
+                      <label className="block text-xs uppercase tracking-wider text-slate-500 mb-1">Antwoord (Optioneel)</label>
                       <input 
                         type="text" 
                         value={manualAnswer}
                         onChange={(e) => setManualAnswer(e.target.value)}
-                        placeholder="Hidden until revealed"
+                        placeholder="Verborgen tot onthulling"
                         className="w-full bg-slate-800 border border-slate-700 rounded-lg p-3 text-white focus:ring-2 focus:ring-cyan-500 outline-none"
                       />
                     </div>
                   )}
 
                   <Button fullWidth onClick={handleManualSubmit} disabled={!manualText}>
-                    Display Question
+                    Toon Vraag
                   </Button>
                 </div>
               )}
@@ -212,20 +170,20 @@ export const HostView: React.FC = () => {
                       />
                       <div className="pointer-events-none">
                         <span className="text-2xl block mb-1">📂</span>
-                        <span className="text-xs text-slate-400">Click to upload .txt file</span>
-                        <p className="text-[10px] text-slate-500 mt-1">Format: Question | Answer</p>
+                        <span className="text-xs text-slate-400">Klik om een .txt bestand te uploaden</span>
+                        <p className="text-[10px] text-slate-500 mt-1">Formaat: Vraag | Antwoord</p>
                       </div>
                    </div>
 
                    <div className="flex justify-between items-center">
-                     <span className="text-sm font-bold text-slate-300">Queue: {queue.length}</span>
+                     <span className="text-sm font-bold text-slate-300">Wachtrij: {queue.length}</span>
                      {queue.length > 0 && (
-                       <button onClick={clearQueue} className="text-xs text-red-400 hover:text-red-300">Clear</button>
+                       <button onClick={clearQueue} className="text-xs text-red-400 hover:text-red-300">Legen</button>
                      )}
                    </div>
 
                    <Button fullWidth onClick={playNextInQueue} disabled={queue.length === 0}>
-                     Play Next ({queue.length})
+                     Speel Volgende ({queue.length})
                    </Button>
                 </div>
               )}
@@ -233,9 +191,9 @@ export const HostView: React.FC = () => {
           </div>
 
           <div className="bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
-             <h3 className="text-lg font-semibold mb-4 text-slate-300">Game Controls</h3>
+             <h3 className="text-lg font-semibold mb-4 text-slate-300">Spelbediening</h3>
              <Button variant="secondary" fullWidth onClick={resetRound}>
-                Force Unlock / Reset Timer
+                Forceer Reset / Reset Timer
              </Button>
           </div>
         </div>
@@ -248,19 +206,19 @@ export const HostView: React.FC = () => {
             {!gameState.currentCard ? (
               <div className="text-slate-500 flex flex-col items-center">
                 <span className="text-6xl mb-4">📺</span>
-                <p className="text-xl">Waiting for a question...</p>
+                <p className="text-xl">Wachten op een vraag...</p>
               </div>
             ) : (
               <div className="z-10 w-full">
                 <span className="inline-block bg-cyan-900 text-cyan-300 text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
-                  {gameState.currentCard.type}
+                  {gameState.currentCard.type === 'question' ? 'VRAAG' : 'OPDRACHT'}
                 </span>
                 <h2 className="text-2xl md:text-4xl font-extrabold leading-tight mb-6">
                   {gameState.currentCard.text}
                 </h2>
                 {gameState.buzzedPlayerId && gameState.currentCard.answer && (
                    <div className="mt-8 pt-8 border-t border-slate-700 animate-fade-in">
-                     <p className="text-slate-400 text-sm uppercase mb-2">Answer</p>
+                     <p className="text-slate-400 text-sm uppercase mb-2">Antwoord</p>
                      <p className="text-xl font-bold text-green-400">{gameState.currentCard.answer}</p>
                    </div>
                 )}
@@ -273,7 +231,7 @@ export const HostView: React.FC = () => {
              {gameState.phase === GamePhase.BUZZED ? (
                <div className="bg-green-600 h-full rounded-2xl flex items-center justify-between px-8 md:px-12 shadow-[0_0_50px_rgba(22,163,74,0.3)] animate-pulse">
                   <div className="flex flex-col">
-                    <span className="text-green-200 text-sm uppercase font-bold tracking-wider">Buzz!</span>
+                    <span className="text-green-200 text-sm uppercase font-bold tracking-wider">Gedrukt!</span>
                     <span className="text-3xl md:text-5xl font-black text-white">
                       {gameState.buzzedPlayerName}
                     </span>
@@ -284,7 +242,7 @@ export const HostView: React.FC = () => {
                </div>
              ) : (
                <div className="bg-slate-800 h-full rounded-2xl flex items-center justify-center border border-slate-700 border-dashed">
-                  <p className="text-slate-500 font-mono">Waiting for buzz...</p>
+                  <p className="text-slate-500 font-mono">Wachten op drukker...</p>
                </div>
              )}
           </div>
