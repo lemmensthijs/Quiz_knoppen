@@ -4,7 +4,7 @@ import { Button } from '../components/Button';
 import { GamePhase, QuestionCard } from '../types';
 
 export const HostView: React.FC = () => {
-  const { gameState, setQuestion, resetRound } = useHostGame();
+  const { gameState, setQuestion, resetRound, connectionType } = useHostGame();
   
   // Tabs: 'manual', 'file' (AI removed)
   const [activeTab, setActiveTab] = useState<'manual' | 'file'>('manual');
@@ -72,7 +72,15 @@ export const HostView: React.FC = () => {
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 flex flex-col">
       {/* HEADER */}
       <header className="flex justify-between items-center mb-8 border-b border-slate-800 pb-4">
-        <h2 className="text-xl md:text-3xl font-bold text-cyan-400">Presentator Dashboard</h2>
+        <div>
+          <h2 className="text-xl md:text-3xl font-bold text-cyan-400">Presentator Dashboard</h2>
+          <div className="flex items-center gap-2 mt-1">
+             <div className={`w-2 h-2 rounded-full ${connectionType === 'supabase' ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+             <span className="text-xs text-slate-400">
+               {connectionType === 'supabase' ? 'Supabase Online' : 'Lokaal Netwerk (Offline Modus)'}
+             </span>
+          </div>
+        </div>
         <div className="flex items-center gap-2 text-sm md:text-base bg-slate-800 px-4 py-2 rounded-full">
           <span className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-500 animate-pulse"></span>
           <span>{gameState.players.length} Spelers Verbonden</span>

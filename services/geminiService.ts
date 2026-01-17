@@ -1,9 +1,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { QuestionCard } from "../types";
 
-// NOTE: In a real production app, never expose API keys on the client.
-// However, for this localized demo/prototype, we access it from env.
-const apiKey = process.env.API_KEY || '';
+// Safety: This file is currently not used in the UI, but we remove process.env
+// to prevent browser crashes if it gets imported.
+const apiKey = ''; 
 
 const ai = new GoogleGenAI({ apiKey });
 
@@ -11,8 +11,8 @@ export const generateQuestion = async (topic: string = 'general knowledge'): Pro
   if (!apiKey) {
     return {
       type: 'question',
-      text: 'API Key missing. Please set process.env.API_KEY to generate real questions.',
-      answer: 'Configuration Error'
+      text: 'API Key ontbreekt. Stel een key in om de AI te gebruiken.',
+      answer: 'Configuratie Fout'
     };
   }
 
@@ -48,8 +48,8 @@ export const generateQuestion = async (topic: string = 'general knowledge'): Pro
     console.error("Gemini Error:", error);
     return {
       type: 'question',
-      text: "Who is the Greek god of the sea?",
-      answer: "Poseidon (Fallback question due to API error)"
+      text: "Fout bij genereren vraag.",
+      answer: "Error"
     };
   }
 };
