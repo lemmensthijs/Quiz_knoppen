@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { createClient, RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { createClient, RealtimeChannel } from '@supabase/supabase-js';
 import { GameMessage, GameState, GamePhase, Player } from '../types';
 
 // --- STAP 3: CONFIGURATIE ---
@@ -15,7 +15,7 @@ const CHANNEL_NAME = 'quiz_buzz_room_v2';
 // We kijken of de URL begint met 'http' en de key is ingevuld.
 const isConfigured = SUPABASE_URL.startsWith('http') && !SUPABASE_KEY.includes('PLAK_HIER');
 
-let supabaseClient: SupabaseClient | null = null;
+let supabaseClient: any = null;
 
 if (isConfigured) {
   try {
